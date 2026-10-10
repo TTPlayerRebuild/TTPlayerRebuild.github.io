@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="为千千静听制作你的个人版配置。选择 XML、写下名字，一键生成。所有处理均在浏览器本地完成。">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <meta name="theme-color" content="#112c3a">
+  <title>千千静听 · 个人版定制</title>
+  <link rel="icon" type="image/svg+xml" href="./assets/logo.svg">
+  <link rel="stylesheet" href="./assets/style.css">
+  <script type="module" src="./assets/app.js"></script>
+</head>
+<body>
+  <div class="ambient" aria-hidden="true"></div>
+  <div class="site-shell">
+    <header class="site-header">
+      <a class="brand" href="./" aria-label="千千静听社区版个人版定制首页"><img src="./assets/logo.svg" width="42" height="42" alt=""><span>千千静听社区版<small>PERSONAL EDITION STUDIO</small></span></a>
+      <a class="source-link" href="https://github.com/TTPlayerRebuild/TTPlayerRebuild.github.io" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8 5-7 7 7 7m8-14 7 7-7 7M14 2l-4 20"/></svg>源代码<span aria-hidden="true"> ↗</span></a>
+    </header>
+    <main>
+      <div class="intro"><span class="eyebrow">熟悉的播放器，专属于你的名字。</span><h1>定制你的<span>千千静听</span></h1><p>把你的名字，留在熟悉的旋律里。</p></div>
+      <section class="studio" aria-label="个人版定制工具">
+        <div class="window-bar"><span class="window-dot" aria-hidden="true"></span><span>千千静听 · 个人版定制</span><span class="window-caption">PERSONAL STUDIO</span></div>
+        <div class="studio-content">
+          <aside class="preview-panel" aria-label="个人版效果预览">
+            <div class="preview-heading"><span>定制效果预览</span><span class="live-indicator"><i></i>实时预览</span></div>
+            <div class="player">
+              <svg viewBox="0 0 327 141" width="327" height="141" role="img" aria-labelledby="player-preview-label">
+                <title id="player-preview-label">默认皮肤个人版效果预览</title>
+                <defs><clipPath id="player-info-clip"><rect x="17" y="35" width="173" height="14"/></clipPath></defs>
+                <image href="./assets/default-skin/player.png" width="327" height="141"/>
+                <text id="preview-title" x="17" y="46" fill="#ffffff" clip-path="url(#player-info-clip)">千千静听 5.7 正式版</text>
+                <text x="277" y="52" text-anchor="end" fill="#8bbac6">声道</text>
+              </svg>
+            </div>
+            <div class="edition-plaque"><img src="./assets/logo.svg" width="50" height="50" alt=""><div><strong>千千静听</strong><div class="edition-line"><span id="preview-edition">社区版</span><span id="preview-dedication" hidden></span></div></div></div>
+            <p class="preview-note">一份陪伴，也可以有自己的名字。<br>输入名称，预览你的专属签名。</p>
+            <div class="engraving" aria-hidden="true">千千静听 · 尽听精彩</div>
+          </aside>
+          <form id="studio-form" class="form-panel" novalidate>
+            <div class="section-label"><span class="step">01</span><h2>选择配置</h2><span class="optional">可选</span></div>
+            <div id="dropzone" class="file-slot">
+              <svg class="file-icon" viewBox="0 0 38 44" aria-hidden="true"><path d="M5 2h18l10 10v30H5z"/><path d="M23 2v11h10M11 22h16M11 28h12M11 34h14"/></svg>
+              <div class="file-copy"><strong id="file-title">放入已有的 XML 配置</strong><span id="file-description">拖到这里，或从电脑中选择</span></div>
+              <button id="choose-file" class="silver-button" type="button">选择文件</button>
+              <input id="config-file" type="file" accept=".xml,text/xml,application/xml" tabindex="-1" hidden>
+            </div>
+            <div class="file-meta"><span>支持 TTPlayer.xml / TTPlayerRebuild.xml</span><button id="remove-file" type="button" hidden>移除文件</button></div>
+            <p id="file-error" class="error" role="alert" hidden></p>
+            <fieldset class="output-choice"><legend id="output-label">没有配置？直接新建一份</legend><div class="segmented"><label><input type="radio" name="edition" value="TTPlayer.xml"><span>原版 <small>TTPlayer.xml</small></span></label><label><input type="radio" name="edition" value="TTPlayerRebuild.xml" checked><span>社区版 <small>TTPlayerRebuild.xml</small></span></label></div></fieldset>
+            <div class="form-divider"></div>
+            <div class="section-label name-label"><span class="step">02</span><h2><label for="personal-name">写下你的名字</label></h2><span id="name-count" class="counter">0 / 64</span></div>
+            <div class="input-well"><input id="personal-name" type="text" maxlength="64" placeholder="例如：Sonic853" autocomplete="off" spellcheck="false" aria-describedby="name-help name-error"><span class="input-mark" aria-hidden="true">✎</span></div>
+            <p id="name-help" class="helper">支持中文、英文与数字，无需填写“个人版”。</p>
+            <p id="name-error" class="error" role="alert" hidden></p>
+            <button id="generate" type="submit" class="generate-button" disabled><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5"/></svg><span>生成并下载</span><span class="button-arrow" aria-hidden="true">›</span></button>
+            <div id="result" class="result" role="status" aria-live="polite">正在准备定制工具…</div>
+            <p class="privacy"><svg viewBox="0 0 16 18" aria-hidden="true"><rect x="2" y="8" width="12" height="9" rx="2"/><path d="M4 8V5a4 4 0 0 1 8 0v3M8 11v3"/></svg>在你的浏览器里完成，不上传配置，不存储姓名。</p>
+          </form>
+        </div>
+        <details class="usage"><summary><span class="info-mark">i</span>下载后，如何使用？<span class="summary-arrow" aria-hidden="true">⌄</span></summary><ol><li>退出播放器，备份播放器正在使用的 XML 配置。</li><li>将下载的文件放回配置原位置，确认文件名没有浏览器添加的“(1)”等后缀。</li><li>重新打开播放器，在标题或“关于”中查看你的名字。上传已有配置可保留原有设置；新建文件仅包含定制名称。</li></ol><p>原版使用“xxx 个人版”；新版社区版的关于页显示“社区版 献给 xxx”。上传后清空名称可取消个人定制。</p></details>
+      </section>
+      <noscript><p class="noscript">此工具需要 JavaScript 才能在本地处理 XML。请启用 JavaScript 后重新打开。</p></noscript>
+    </main>
+    <footer><span>让每一段旋律，都有你的印记。</span><a href="https://github.com/Sonic853/TTPlayer" target="_blank" rel="noopener noreferrer">千千静听社区版 ↗</a></footer>
+  </div>
+</body>
+</html>
