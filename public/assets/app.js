@@ -1,5 +1,6 @@
 import { createCodec, normalizeName, encodePersonalName, decodePersonalName } from './personalization.js';
 import { MAX_CONFIG_BYTES, decodeConfig, inspectConfig, generateConfig } from './config.js';
+import { DEFAULT_BUILD_VERSION, isBuildVersion, previewText, attachTitleScroller } from './preview.js';
 
 const byId = id => document.getElementById(id);
 const form = byId('studio-form');
@@ -8,6 +9,8 @@ const picker = byId('config-file');
 const dropzone = byId('dropzone');
 const generate = byId('generate');
 const result = byId('result');
+const setPreviewTitle = attachTitleScroller(byId('preview-title'), 173);
+byId('preview-build-version').value = DEFAULT_BUILD_VERSION;
 let codec, config = null, busy = false, invalidFile = false, uploadId = 0;
 
 function status(message, success = false) {
@@ -27,11 +30,25 @@ function update() {
   const name = normalizeName(input.value);
   const original = edition() === 'TTPlayer.xml';
   byId('name-count').textContent = `${input.value.length} / 64`;
-  byId('preview-title').textContent = `千千静听${name ? ` ${name} 个人版` : ' 5.7 正式版'}`;
-  byId('player-preview-label').textContent = `默认皮肤预览：${byId('preview-title').textContent}`;
-  byId('preview-edition').textContent = original ? (name ? `${name} 个人版` : '正式版') : '社区版';
-  byId('preview-dedication').textContent = name ? `献给 ${name}` : '';
-  byId('preview-dedication').hidden = original || !name;
+  const buildVersion = byId('preview-build-version').value.trim();
+  const preview = previewText({ original, name, buildVersion, originalVersion: byId('preview-original-version').value });
+  setPreviewTitle(preview.title);
+  byId('player-preview-label').textContent = `默认皮肤，无当前曲目：${preview.title}`;
+  byId('preview-full-title').textContent = preview.title;
+  byId('preview-edition').textContent = preview.edition;
+  byId('preview-edition').title = preview.edition;
+  byId('preview-edition-line').hidden = !preview.edition;
+  byId('preview-edition-line').classList.toggle('original', original);
+  byId('preview-dedication').textContent = preview.dedication;
+  byId('preview-dedication').title = preview.dedication;
+  byId('preview-dedication').hidden = !preview.dedication;
+  byId('preview-full-signature').textContent = [preview.edition, preview.dedication].filter(Boolean).join(' ') || '（留空）';
+  byId('preview-about-version').textContent = `版本：${preview.aboutVersion}`;
+  byId('preview-original-choice').hidden = !original;
+  byId('preview-build-choice').hidden = original;
+  const invalidVersion = !original && !isBuildVersion(buildVersion);
+  byId('preview-build-version').setAttribute('aria-invalid', String(invalidVersion));
+  showError('preview-version-error', invalidVersion ? `请填写日期版本，例如 2026.10.02p1；目前按 ${DEFAULT_BUILD_VERSION} 预览。` : '');
   byId('name-help').textContent = config ? '保留其它设置；名称留空可取消个人定制。' : '支持中文、英文和数字，无需填写“个人版”。';
   generate.disabled = !codec || busy || invalidFile;
   if (codec) {
@@ -114,6 +131,8 @@ dropzone.addEventListener('drop', event => {
 window.addEventListener('dragover', event => event.preventDefault());
 window.addEventListener('drop', event => event.preventDefault());
 input.addEventListener('input', () => { update(); status('预览已更新，生成后即可下载。'); });
+byId('preview-build-version').addEventListener('input', update);
+byId('preview-original-version').addEventListener('change', update);
 form.querySelectorAll('input[name="edition"]').forEach(radio => radio.addEventListener('change', () => {
   update(); status(`将下载为 ${edition()}。`);
 }));
@@ -161,4 +180,5 @@ async function initialize() {
     status('定制工具加载失败，请检查网络后刷新页面。');
   }
 }
+update();
 initialize();

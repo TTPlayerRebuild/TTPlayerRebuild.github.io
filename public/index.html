@@ -30,12 +30,20 @@
                 <title id="player-preview-label">默认皮肤个人版效果预览</title>
                 <defs><clipPath id="player-info-clip"><rect x="17" y="35" width="173" height="14"/></clipPath></defs>
                 <image href="./assets/default-skin/player.png" width="327" height="141"/>
-                <text id="preview-title" x="17" y="46" fill="#ffffff" clip-path="url(#player-info-clip)">千千静听 5.7 正式版</text>
+                <g clip-path="url(#player-info-clip)"><text id="preview-title" x="17" y="46" fill="#ffffff"></text></g>
                 <text x="277" y="52" text-anchor="end" fill="#8bbac6">声道</text>
               </svg>
             </div>
-            <div class="edition-plaque"><img src="./assets/logo.svg" width="50" height="50" alt=""><div><strong>千千静听</strong><div class="edition-line"><span id="preview-edition">社区版</span><span id="preview-dedication" hidden></span></div></div></div>
-            <p class="preview-note">一份陪伴，也可以有自己的名字。<br>输入名称，预览你的专属签名。</p>
+            <div class="edition-plaque"><img src="./assets/logo.svg" width="50" height="50" alt=""><div><strong>千千静听</strong><div id="preview-edition-line" class="edition-line"><span id="preview-edition">社区版</span><span id="preview-dedication" hidden></span></div><span id="preview-about-version" class="about-version"></span></div></div>
+            <p class="preview-note">无当前曲目时的显示效果。<br>长文字会在播放器信息区内往返滚动。</p>
+            <details class="preview-settings">
+              <summary>预览版本与完整文字</summary>
+              <div id="preview-original-choice" hidden><label for="preview-original-version">原版程序版本</label><select id="preview-original-version"><option value="5.7.9">5.7.9（显示 5.7 正式版）</option><option value="5.0.1">5.0.1</option></select></div>
+              <div id="preview-build-choice"><label for="preview-build-version">社区版构建版本</label><input id="preview-build-version" type="text" maxlength="32" spellcheck="false" autocomplete="off" aria-describedby="preview-version-help preview-version-error"></div>
+              <p id="preview-version-error" class="error" hidden></p>
+              <p id="preview-version-help">按播放器实际版本选择，仅影响预览。配置文件中的版本不决定播放器显示的版本。</p>
+              <dl><dt>播放器信息区</dt><dd id="preview-full-title"></dd><dt>关于页署名</dt><dd id="preview-full-signature"></dd></dl>
+            </details>
             <div class="engraving" aria-hidden="true">千千静听 · 尽听精彩</div>
           </aside>
           <form id="studio-form" class="form-panel" novalidate>
