@@ -41,4 +41,5 @@ with zipfile.ZipFile(workspace / 'Skin' / 'DEFAULT_SKIN_579.skn') as skin:
     output = website / 'public' / 'assets' / 'default-skin'
     output.mkdir(parents=True, exist_ok=True)
     player.save(output / 'player.png', optimize=True)
+    icon.save(output / 'icon.png', optimize=True)
     print(f'Saved {player.width} x {player.height} default skin preview.')

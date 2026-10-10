@@ -1,6 +1,7 @@
 import { createCodec, normalizeName, encodePersonalName, decodePersonalName } from './personalization.js';
 import { MAX_CONFIG_BYTES, decodeConfig, inspectConfig, generateConfig } from './config.js';
 import { DEFAULT_BUILD_VERSION, isBuildVersion, previewText, attachTitleScroller } from './preview.js';
+import { setupSkinPreview } from './skn-preview.js';
 
 const byId = id => document.getElementById(id);
 const form = byId('studio-form');
@@ -12,6 +13,7 @@ const result = byId('result');
 const setPreviewTitle = attachTitleScroller(byId('preview-title'), 173);
 byId('preview-build-version').value = DEFAULT_BUILD_VERSION;
 let codec, config = null, busy = false, invalidFile = false, uploadId = 0;
+const skinPreview = setupSkinPreview(setPreviewTitle, update);
 
 function status(message, success = false) {
   result.textContent = message;
@@ -33,7 +35,7 @@ function update() {
   const buildVersion = byId('preview-build-version').value.trim();
   const preview = previewText({ original, name, buildVersion, originalVersion: byId('preview-original-version').value });
   setPreviewTitle(preview.title);
-  byId('player-preview-label').textContent = `默认皮肤，无当前曲目：${preview.title}`;
+  byId('player-preview-label').textContent = `${skinPreview.name}，无当前曲目：${preview.title}`;
   byId('preview-full-title').textContent = preview.title;
   byId('preview-edition').textContent = preview.edition;
   byId('preview-edition').title = preview.edition;

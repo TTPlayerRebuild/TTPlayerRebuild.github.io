@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="为千千静听制作你的个人版配置。选择 XML、写下名字，一键生成。所有处理均在浏览器本地完成。">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; worker-src 'self'; style-src 'self'; img-src 'self' data: blob:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
   <meta name="theme-color" content="#112c3a">
   <title>千千静听 · 个人版定制</title>
   <link rel="icon" type="image/svg+xml" href="./assets/logo.svg">
@@ -25,14 +25,20 @@
         <div class="studio-content">
           <aside class="preview-panel" aria-label="个人版效果预览">
             <div class="preview-heading"><span>定制效果预览</span><span class="live-indicator"><i></i>实时预览</span></div>
-            <div class="player">
-              <svg viewBox="0 0 327 141" width="327" height="141" role="img" aria-labelledby="player-preview-label">
+            <div id="skin-dropzone" class="skin-dropzone" aria-label="SKN 皮肤预览区">
+            <div id="player-preview" class="player">
+              <svg id="player-svg" viewBox="0 0 327 141" width="327" height="141" role="img" aria-labelledby="player-preview-label">
                 <title id="player-preview-label">默认皮肤个人版效果预览</title>
-                <defs><clipPath id="player-info-clip"><rect x="17" y="35" width="173" height="14"/></clipPath></defs>
-                <image href="./assets/default-skin/player.png" width="327" height="141"/>
+                <defs><clipPath id="player-info-clip"><rect id="player-info-rect" x="17" y="35" width="173" height="14"/></clipPath><clipPath id="player-stereo-clip"><rect id="player-stereo-rect" x="205" y="41" width="72" height="14"/></clipPath></defs>
+                <image id="preview-background" href="./assets/default-skin/player.png" width="327" height="141"/>
                 <g clip-path="url(#player-info-clip)"><text id="preview-title" x="17" y="46" fill="#ffffff"></text></g>
-                <text x="277" y="52" text-anchor="end" fill="#8bbac6">声道</text>
+                <g clip-path="url(#player-stereo-clip)"><text id="preview-stereo" x="277" y="52" text-anchor="end" fill="#8bbac6">声道</text></g>
               </svg>
+            </div>
+            <div class="skin-tools"><span>拖入 .skn 换肤</span><button id="choose-skin" type="button">选择皮肤</button><button id="reset-skin" type="button" hidden>恢复默认</button><input id="skin-file" type="file" accept=".skn" hidden></div>
+            <p id="skin-status" class="skin-status" role="status">TT.experience · 默认皮肤</p>
+            <p id="skin-error" class="skin-message error" role="alert" hidden></p>
+            <details id="skin-notes" class="skin-notes" hidden><summary id="skin-notes-title">皮肤预览说明</summary><p id="skin-warning" class="skin-message"></p></details>
             </div>
             <div class="edition-plaque"><img src="./assets/logo.svg" width="50" height="50" alt=""><div><strong>千千静听</strong><div id="preview-edition-line" class="edition-line"><span id="preview-edition">社区版</span><span id="preview-dedication" hidden></span></div><span id="preview-about-version" class="about-version"></span></div></div>
             <p class="preview-note">无当前曲目时的显示效果。<br>长文字会在播放器信息区内往返滚动。</p>
@@ -64,7 +70,7 @@
             <p id="name-error" class="error" role="alert" hidden></p>
             <button id="generate" type="submit" class="generate-button" disabled><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5"/></svg><span>生成并下载</span><span class="button-arrow" aria-hidden="true">›</span></button>
             <div id="result" class="result" role="status" aria-live="polite">正在准备定制工具…</div>
-            <p class="privacy"><svg viewBox="0 0 16 18" aria-hidden="true"><rect x="2" y="8" width="12" height="9" rx="2"/><path d="M4 8V5a4 4 0 0 1 8 0v3M8 11v3"/></svg>在你的浏览器里完成，不上传配置，不存储姓名。</p>
+            <p class="privacy"><svg viewBox="0 0 16 18" aria-hidden="true"><rect x="2" y="8" width="12" height="9" rx="2"/><path d="M4 8V5a4 4 0 0 1 8 0v3M8 11v3"/></svg>在你的浏览器里完成，不上传文件，不存储姓名。</p>
           </form>
         </div>
         <details class="usage"><summary><span class="info-mark">i</span>下载后，如何使用？<span class="summary-arrow" aria-hidden="true">⌄</span></summary><ol><li>退出播放器，备份播放器正在使用的 XML 配置。</li><li>将下载的文件放回配置原位置，确认文件名没有浏览器添加的“(1)”等后缀。</li><li>重新打开播放器，在标题或“关于”中查看你的名字。上传已有配置可保留原有设置；新建文件仅包含定制名称。</li></ol><p>原版使用“xxx 个人版”；新版社区版的关于页显示“社区版 献给 xxx”。上传后清空名称可取消个人定制。</p></details>

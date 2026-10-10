@@ -39,12 +39,15 @@ export function advanceScroll(state) {
 
 export function attachTitleScroller(element, availableWidth) {
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
-  let timer, state;
+  let timer, state, left = Number(element.getAttribute?.('x') || 0), alignment = 'left';
   function reset() {
     clearInterval(timer);
     element.removeAttribute('transform');
     state = createScrollState(element.getComputedTextLength(), availableWidth);
-    if (!state.maximum || reducedMotion.matches || document.hidden) return;
+    const spare = Math.max(0, availableWidth - element.getComputedTextLength());
+    element.setAttribute('x', left + (alignment === 'right' ? spare : alignment === 'center' ? spare / 2 : 0));
+    element.setAttribute('text-anchor', 'start');
+    if (availableWidth <= 0 || !state.maximum || reducedMotion.matches || document.hidden) return;
     timer = setInterval(() => {
       advanceScroll(state);
       element.setAttribute('transform', `translate(${state.offset} 0)`);
@@ -53,9 +56,16 @@ export function attachTitleScroller(element, availableWidth) {
   document.addEventListener('visibilitychange', reset);
   reducedMotion.addEventListener('change', reset);
   document.fonts.ready.then(reset);
-  return title => {
+  const setTitle = title => {
     if (element.textContent === title && state) return;
     element.textContent = title;
     reset();
   };
+  setTitle.configure = layout => {
+    availableWidth = layout?.width || 0;
+    left = layout?.x || 0;
+    alignment = layout?.align || 'left';
+    reset();
+  };
+  return setTitle;
 }
